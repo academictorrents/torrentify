@@ -1,0 +1,77 @@
+<html>
+<head>
+    <title>torrentify!</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css"> <!-- load bootstrap via CDN -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> <!-- load jquery via CDN -->
+</head>
+<body>
+  <form action="process.php" method="GET">
+    <div id="name-group" class="form-group">
+    <label for="url">URL to data</label>
+    <input type="text" class="form-control" name="url"
+      placeholder="http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz">
+    </div>
+    <button type="submit" class="btn btn-primary" id="submit">Torrentify!</button>
+  </form>
+</body>
+
+<script>
+id = null;
+torrent = null;
+poll = null;
+
+poll_status = function() {
+  $.get('query.php', {'id': id}).done(function(data) {
+    data = JSON.parse(data);
+    console.log(data);
+    current = parseInt(data.progress.split('/')[0]);
+    total = parseInt(data.progress.split('/')[1]);
+    console.log(current);
+    console.log(total);
+    $('#status').innerText = data.progress + ' pieces created!';
+    if (current==total) {
+      clearInterval(poll);
+      $('.status-div').remove();
+      $('#submit').remove();
+      $('body').append('<a href="torrents/' + torrent + '.torrent" ' +
+        'class="btn btn-success" role="button">Download Torrent!</a>');
+    }
+  });
+}
+
+$(document).ready(function() {
+  // form submission
+	$('form').submit(function(event) {
+		$('.form-group').removeClass('has-error'); // remove the error class
+		$('.help-block').remove(); // remove the error text
+
+    url = $('input[name=url]').val();
+    torrent = url.split("/").slice(-1)[0];
+		$.get('create.php', {'url': $('input[name=url]').val()})
+      .done(function(data){
+        data = JSON.parse(data);
+        console.log(data);
+
+				if (data.status=="ERROR") {
+					$('#url-group').addClass('has-error');
+					$('#url-group').append('<div class="help-block">' + data.msg + '</div>');
+				} else {
+          console.log("Torrentifying!");
+          id = data.id;
+
+          // begin polling
+          $('.status-div').remove();
+          $('body').append(
+            '<div class="status-div alert alert-info">' +
+            '<strong>Torrentifying!</strong>' +
+            '<span id="status"></span></div>');
+          poll_status();
+          poll = setInterval(poll_status, 100);
+        }
+			});
+		event.preventDefault();
+	});
+
+});
+</script>
+</html>
