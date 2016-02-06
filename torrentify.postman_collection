@@ -4,7 +4,8 @@
 	"description": "",
 	"order": [
 		"bd7570c7-13a1-9435-322c-bfaefe913d09",
-		"9ac89346-c844-6825-ddcc-e3ead5f5c32c"
+		"9ac89346-c844-6825-ddcc-e3ead5f5c32c",
+		"500037e0-db79-2dc6-42a7-065ea5f19885"
 	],
 	"folders": [],
 	"timestamp": 1454707230948,
@@ -12,6 +13,25 @@
 	"remoteLink": "",
 	"public": false,
 	"requests": [
+		{
+			"id": "500037e0-db79-2dc6-42a7-065ea5f19885",
+			"headers": "",
+			"url": "nanedi.cs.umb.edu/torrentify/query.php?id=15",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1454797563665,
+			"name": "Query  CIFAR10",
+			"description": "Queries progress of CIFAR10.",
+			"collectionId": "c4cf53c7-9fa7-5ace-8470-a11bc0092630",
+			"responses": []
+		},
 		{
 			"id": "9ac89346-c844-6825-ddcc-e3ead5f5c32c",
 			"headers": "",
