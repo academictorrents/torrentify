@@ -15,7 +15,7 @@
 		{
 			"id": "9ac89346-c844-6825-ddcc-e3ead5f5c32c",
 			"headers": "",
-			"url": "nanedi.cs.umb.edu/torrentify/create.php?url=http%3A%2F%2Fyann.lecun.com%2Fexdb%2Fmnist%2Ftrain-images-idx3-ubyte.gz&id=15",
+			"url": "nanedi.cs.umb.edu/torrentify/create.php?url=https%3A%2F%2Fwww.cs.toronto.edu%2F~kriz%2Fcifar-10-python.tar.gz&id=15",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "GET",
@@ -25,7 +25,7 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1454796948122,
+			"time": 1454797273006,
 			"name": "Create CIFAR10",
 			"description": "Create torrent of CIFAR10.",
 			"collectionId": "c4cf53c7-9fa7-5ace-8470-a11bc0092630",
