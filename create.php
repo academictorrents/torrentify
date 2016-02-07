@@ -4,12 +4,12 @@ class Torrent {
   public $metadata;
   public $name;
 
-  function __construct ($url_or_file, $id) {
+  function __construct ($url_or_file) {
     $filesize = (int) array_change_key_case(
       get_headers($url_or_file, TRUE))['content-length'];
     $piece_size = $this->get_piece_size($filesize);
     $this->name = end(explode('/', $url_or_file));
-    $log = getcwd() . "/log/" . $id;
+    $log = getcwd() . "/log/" . base64_encode($this->name);
 
     # now create the actual torrent
     $this->metadata = array(
@@ -113,19 +113,18 @@ class Torrent {
 
 /*
  create:
- 1. Input: GET variables url-encoded string "url", random int "id".
+ 1. Input: GET variables url-encoded string "url".
  2. Creates log for "id" in ./log/ for the download.
  3. Streamingly creates torrent, updating log.
  4. Dumps finished torrent file in ./torrents/
 */
 
 # Main
-if (isset($_GET["url"]) && isset($_GET["id"]) &&
-    filter_var($_GET["url"], FILTER_VALIDATE_URL)) {
-  $torrent = new Torrent($_GET["url"], $_GET["id"]);
+if (isset($_GET["url"]) ) && filter_var($_GET["url"], FILTER_VALIDATE_URL)) {
+  $torrent = new Torrent($_GET["url"]);
 } else {
   echo(json_encode(array(
     'status' => 'ERROR',
-    'msg' => "Requires GET variables 'url' and 'id'")));
+    'msg' => "Requires GET variable 'url'")));
 };
 ?>
