@@ -120,7 +120,7 @@ class Torrent {
 */
 
 # Main
-if (isset($_GET["url"]) ) && filter_var($_GET["url"], FILTER_VALIDATE_URL)) {
+if (isset($_GET["url"]) && filter_var($_GET["url"], FILTER_VALIDATE_URL)) {
   $torrent = new Torrent($_GET["url"]);
 } else {
   echo(json_encode(array(
