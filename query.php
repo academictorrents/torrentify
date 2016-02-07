@@ -2,15 +2,15 @@
 
 /*
  query:
- 1. Takes in GET variable "id".
- 2. Reads status of torrent pertaining to "id".
+ 1. Takes in GET variable "url".
+ 2. Reads status of torrent pertaining to "url".
  3. Returns it
 */
 
-if (isset($_GET["id"])) {
+if (isset($_GET["url"])) {
   # prevent ../ attacks
-  $id = end(explode('/', $_GET["id"]));
-  $path = getcwd() . "/log/" . $id;
+  $url = end(explode('/', $_GET["url"]));
+  $path = getcwd() . "/log/" . base64_encode($url);
   if ( file_exists($path) && ($log = fopen($path, "r"))!==false ) {
     $str = stream_get_contents($log);
     fclose($log);
@@ -20,11 +20,11 @@ if (isset($_GET["id"])) {
   } else {
     echo(json_encode(array(
       'status' => 'ERROR',
-      'msg' => "Bad 'id'.")));
+      'msg' => "No torrent for 'url' exists.")));
   }
 } else {
   echo(json_encode(array(
     'status' => 'ERROR',
-    'msg' => "Must supply GET variable 'id'.")));
+    'msg' => "Must supply GET variable 'url'.")));
 };
 ?>
