@@ -43,6 +43,8 @@
 url = null;
 basename = null;
 poll = null;
+failures = 0;
+max_failures = 3;
 
 poll_status = function() {
   $.get('query.php', {'url': url}).done(function(data) {
@@ -61,7 +63,9 @@ poll_status = function() {
         $("a").attr("href", "torrents/" + basename + ".torrent");
         console.log('done!');
       }
-    } else {
+    } else if (failures < max_failures) {
+      failures += 1;
+    } else {  
       clearInterval(poll);
       alert("Bad URL!");
       $('#torrentify').removeClass('disabled');
@@ -77,6 +81,7 @@ $(document).ready(function() {
 
     url = $('input[name=url]').val();
     basename = url.split("/").slice(-1)[0];
+    failures = 0;
     $.get('create.php', {'url': url});
 
     setTimeout(function(){
