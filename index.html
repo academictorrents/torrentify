@@ -25,17 +25,25 @@ poll_status = function() {
   $.get('query.php', {'url': url}).done(function(data) {
     data = JSON.parse(data);
     console.log(data);
-    current = parseInt(data.progress.split('/')[0]);
-    total = parseInt(data.progress.split('/')[1]);
-    console.log(current);
-    console.log(total);
-    $('#status').innerText = data.progress + ' complete';
-    if (current==total) {
+    if (data['status']!='ERROR'){
+      current = parseInt(data.progress.split('/')[0]);
+      total = parseInt(data.progress.split('/')[1]);
+      console.log(current);
+      console.log(total);
+      $('#status').innerText = data.progress + ' complete';
+      if (current==total) {
+        clearInterval(poll);
+        $('.status-div').remove();
+        $('#submit').remove();
+        $('body').append('<a href="torrents/' + torrent + '.torrent" ' +
+          'class="btn btn-success" role="button">Download Torrent!</a>');
+      }
+    } else {
       clearInterval(poll);
       $('.status-div').remove();
       $('#submit').remove();
       $('body').append('<a href="torrents/' + torrent + '.torrent" ' +
-        'class="btn btn-success" role="button">Download Torrent!</a>');
+        'class="btn btn-success" role="button">Download Torrent!</a>');      
     }
   });
 }
