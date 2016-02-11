@@ -43,7 +43,7 @@ poll_status = function() {
       $('.status-div').remove();
       $('#submit').remove();
       $('body').append('<a href="torrents/' + torrent + '.torrent" ' +
-        'class="btn btn-success" role="button">Download Torrent!</a>');      
+        'class="btn btn-success" role="button">Download Torrent!</a>');
     }
   });
 }
@@ -65,7 +65,6 @@ $(document).ready(function() {
       '<div class="status-div alert alert-info">' +
       '<strong>Torrentifying!</strong>' +
       '<span id="status"></span></div>');
-    poll_status();
     poll = setInterval(poll_status, 100);
 	});
 

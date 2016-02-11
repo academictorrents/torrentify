@@ -9,7 +9,7 @@ class Torrent {
       get_headers($url_or_file, TRUE))['content-length'];
     $piece_size = $this->get_piece_size($filesize);
     $this->name = end(explode('/', $url_or_file));
-    $log = getcwd() . "/log/" . base64_encode($this->name);
+    $log = getcwd() . "/log/" . base64_encode($url_or_file);
 
     # now create the actual torrent
     $this->metadata = array(
@@ -121,7 +121,12 @@ class Torrent {
 
 # Main
 if (isset($_GET["url"]) && filter_var($_GET["url"], FILTER_VALIDATE_URL)) {
-  $torrent = new Torrent($_GET["url"]);
+  $log = getcwd() . "/log/" . base64_encode($_GET["url]);
+
+  # if log exists, don't start new torrent
+  if (!file_exists($log))
+    $torrent = new Torrent($_GET["url"]);
+  };
 } else {
   echo(json_encode(array(
     'status' => 'ERROR',

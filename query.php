@@ -10,7 +10,7 @@
 if (isset($_GET["url"])) {
   # prevent ../ attacks
   $url = end(explode('/', $_GET["url"]));
-  $path = getcwd() . "/log/" . base64_encode($url);
+  $path = getcwd() . "/log/" . base64_encode($_GET["url"]);
   if ( file_exists($path) && ($log = fopen($path, "r"))!==false ) {
     $str = stream_get_contents($log);
     fclose($log);
