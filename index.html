@@ -46,6 +46,14 @@ poll = null;
 failures = 0;
 max_failures = 3;
 
+safe_b64encode = function(s) {
+  new_s = btoa(s);
+  new_s = new_s.replace("+", "-");
+  new_s = new_s.replace("/", "_");
+  new_s = new_s.replace("=", "");
+  return(new_s);
+}
+
 poll_status = function() {
   $.get('query.php', {'url': url}).done(function(data) {
     data = JSON.parse(data);
@@ -53,17 +61,22 @@ poll_status = function() {
     if (data['status']!='ERROR'){
       current = parseInt(data.progress.split('/')[0]);
       total = parseInt(data.progress.split('/')[1]);
-      value = current/total * 100;
-      $('.progress-bar').css('width', (current/total*100)+'%').attr('aria-valuenow', value);
-      $('.progress-bar').text(data['progress'] + ' bytes processed.');
+      percentage = current/total * 100;
+      $('.progress-bar').css('width', (percentage)+'%').attr('aria-valuenow', percentage);
+      if (percentage==100) {
+        $('.progress-bar').text('Done!  Click "Download Torrent!"');
+      } else {
+        $('.progress-bar').text(data['progress'] + ' bytes processed.');
+      }
       if (current==total) {
         clearInterval(poll);
         $('#torrentify').removeClass('disabled');
         $('#download').removeClass('disabled');
-        $("a").attr("href", "torrents/" + basename + ".torrent");
+        $("a").attr("href", "torrents/" + safe_b64encode(url) + "/" + basename + ".torrent");
         console.log('done!');
       }
     } else if (failures < max_failures) {
+      console.log("Trying again...");
       failures += 1;
     } else {  
       clearInterval(poll);
@@ -79,7 +92,7 @@ $(document).ready(function() {
     $('.form-group').removeClass('has-error');
     $('.help-block').remove();
 
-    url = $('input[name=url]').val();
+    url = $.trim($('input[name=url]').val());
     basename = url.split("/").slice(-1)[0];
     failures = 0;
     $.get('create.php', {'url': url});

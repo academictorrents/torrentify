@@ -1,15 +1,24 @@
 <?php
 
+function safe_b64encode($string) {
+  $data = base64_encode($string);
+  $data = str_replace(array('+','/','='),array('-','_',''),$data);
+  return $data;
+}
+
 class Torrent {
   public $metadata;
   public $name;
-
+  public $id;
+  
   function __construct ($url_or_file) {
+    $this->name = urldecode(end(explode('/', $url_or_file)));
+    $this->id = safe_b64encode($url_or_file);
+
     $filesize = (int) array_change_key_case(
       get_headers($url_or_file, TRUE))['content-length'];
     $piece_size = $this->get_piece_size($filesize);
-    $this->name = end(explode('/', $url_or_file));
-    $log = getcwd() . "/log/" . base64_encode($url_or_file);
+    $log = getcwd() . "/log/" . $this->id;
 
     # now create the actual torrent
     $this->metadata = array(
@@ -105,7 +114,9 @@ class Torrent {
   }
 
   private function save() {
-    $f = fopen(getcwd() . "/torrents/" . $this->name . ".torrent", "w");
+    $dir = getcwd() . "/torrents/" . $this->id; 
+    mkdir($dir);
+    $f = fopen($dir . "/" . $this->name . ".torrent", "w");
     fwrite($f, Torrent::bencode($this->metadata));
     fclose($f);
   }
@@ -121,11 +132,26 @@ class Torrent {
 
 # Main
 if (isset($_GET["url"]) && filter_var($_GET["url"], FILTER_VALIDATE_URL)) {
-  $log = getcwd() . "/log/" . base64_encode($_GET["url"]);
+  $logname = getcwd() . "/log/" . safe_b64encode($_GET["url"]);
 
   # if log exists, don't start new torrent
-  if (!file_exists($log))
+  if (file_exists($logname)) {
+    # check status; return "done", or "processing"
+    $contents = explode("/", stream_get_contents(fopen($logname, "r")));
+    $progress = intval($contents[0]);
+    $total = intval($contents[1]);
+    if ($progress==$total) {
+      echo(json_encode(array(
+        'status' => 'OK',
+        'msg' => "Torrent complete!")));
+    } else {
+      echo(json_encode(array(
+        'status' => 'OK',
+        'msg' => "Torrent already processing!")));
+    }    
+  } else {
     $torrent = new Torrent($_GET["url"]);
+  }
 } else {
   echo(json_encode(array(
     'status' => 'ERROR',
