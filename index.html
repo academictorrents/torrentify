@@ -48,9 +48,9 @@ max_failures = 3;
 
 safe_b64encode = function(s) {
   new_s = btoa(s);
-  new_s = new_s.replace("+", "-");
-  new_s = new_s.replace("/", "_");
-  new_s = new_s.replace("=", "");
+  new_s = new_s.replace(/\+/g, "-");
+  new_s = new_s.replace(/\//g, "_");
+  new_s = new_s.replace(/=/g, "");
   return(new_s);
 }
 
@@ -97,6 +97,9 @@ $(document).ready(function() {
     failures = 0;
     $.get('create.php', {'url': url});
 
+    $('.progress-bar').css('width', '0%').attr('aria-valuenow', 0);
+    $('.progress-bar').text('');
+			  
     setTimeout(function(){
       $('#torrentify').addClass('disabled');
 
