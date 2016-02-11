@@ -121,12 +121,11 @@ class Torrent {
 
 # Main
 if (isset($_GET["url"]) && filter_var($_GET["url"], FILTER_VALIDATE_URL)) {
-  $log = getcwd() . "/log/" . base64_encode($_GET["url]);
+  $log = getcwd() . "/log/" . base64_encode($_GET["url"]);
 
   # if log exists, don't start new torrent
   if (!file_exists($log))
     $torrent = new Torrent($_GET["url"]);
-  };
 } else {
   echo(json_encode(array(
     'status' => 'ERROR',
