@@ -44,7 +44,7 @@ url = null;
 basename = null;
 poll = null;
 failures = 0;
-max_failures = 3;
+max_failures = 9;
 
 safe_b64encode = function(s) {
   new_s = btoa(s);
@@ -104,7 +104,7 @@ $(document).ready(function() {
       $('#torrentify').addClass('disabled');
 
       // begin polling
-      poll = setInterval(poll_status, 1000);
+      poll = setInterval(poll_status, 500);
     }, 2000);
   });
 });

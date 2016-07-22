@@ -25,7 +25,7 @@ if (isset($_GET["url"])) {
   } else {
     echo(json_encode(array(
       'status' => 'ERROR',
-      'msg' => "No torrent for 'url' exists.")));
+      'msg' => "No torrent for url $path exists.")));
   }
 } else {
   echo(json_encode(array(

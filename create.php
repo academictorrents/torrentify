@@ -82,6 +82,7 @@ class Torrent {
     $part = '';
 
     $position = 0;
+    $i = 0;
     while ($position < $filesize) {
       $bytes_read = 0;
       # fread doesn't actually read in the correct number of bytes
@@ -103,12 +104,14 @@ class Torrent {
         $position = $filesize;
       }
       # log progress every 5 pieces
-      if ($position == $filesize || $position % (5*$piece_length) == 0) {
+      if ($i++ % 5 == 0 || $position == $filesize) {
         $log = fopen($logfile, "w");
         fwrite($log, $position . '/' . $filesize);
+        fflush($f);
         fclose($log);
       }
     }
+    fflush($f);
     fclose($fp);
     return $pieces;
   }
@@ -118,6 +121,7 @@ class Torrent {
     mkdir($dir);
     $f = fopen($dir . "/" . $this->name . ".torrent", "w");
     fwrite($f, Torrent::bencode($this->metadata));
+    fflush($f);
     fclose($f);
   }
 }
