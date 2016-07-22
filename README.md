@@ -1,23 +1,17 @@
 # torrentify
 
-A simple web app that turns a URL into torrent.  Consists of two components:
+A simple web app that turns a URL into torrent.  Consists of two endpoints:
 
 - `create.php`, an endpoint which initates the PHP download and torrent creation
-- `index.html`, a simple web form which creates torrent for download
+- `query.php`, an endpoint for querying the status of a torrent being created.
 
-`query.php` was intended to be an endpoint for querying the status of torrent creation.
+Also included is a front-end interface:
+
+- `index.html`, a simple web form which creates torrent for download
 
 Features
 --------
 
-- The data is never actually downloaded; only the resulting torrent is saved on the server.
+- Torrent is created from HTTP stream; server does not store data set.
 - Automatic piece size optimization.
 - URL becomes web seed!
-
-Limitations
------------
-
-- Only tested using PHP dev server (php -S localhost:8000)
-- PHP response is blocked by torrent creation.
-- Status is not written until torrent is completed; querying status does not work.
-- Ideally torrent creation is separate job, but this requires exec.
